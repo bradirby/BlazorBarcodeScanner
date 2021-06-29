@@ -11,6 +11,8 @@ namespace BlazorZXingJSApp.Client.Pages
         private int StreamWidth = 640;
         private int StreamHeight = 480;
 
+        private string ReaderState { get; set; } = "init";
+
         private string LocalBarcodeText;
         private int _currentVideoSourceIdx = 0;
 
@@ -46,6 +48,7 @@ namespace BlazorZXingJSApp.Client.Pages
         private void LocalReceivedBarcodeText(BarcodeReceivedEventArgs args)
         {
             this.LocalBarcodeText = args.BarcodeText;
+            
             StateHasChanged();
         }
 
@@ -53,6 +56,20 @@ namespace BlazorZXingJSApp.Client.Pages
         {
             _imgSrc = await _reader.Capture();
             StateHasChanged();
+        }
+
+        private void StartDecoding()
+        {
+            ReaderState = "decoding";
+            _reader.StartDecoding();
+            
+        }
+
+        private void StopDecoding()
+        {
+            ReaderState = "stopped";
+            _reader.StopDecoding();
+
         }
 
         private void OnVideoSourceNext(MouseEventArgs args)
